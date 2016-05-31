@@ -1,8 +1,5 @@
-#include "cabeceras.h"
-#include "modulo1.h"
-#include "modulo2.h"
-#include "modulo3.h"
-
+#include "stdio.h"
+#include "modulos.h"
 
 
 int main(void){
@@ -25,7 +22,7 @@ int main(void){
 			scanf("%d",&opcion);
 			//Verificando que se ingrese una opción válida
 			if(opcion>4 || opcion<1){
-				printf("Opción inválida\n");
+				printf("\n\nOpción inválida\n");
 			}else{
 				break;
 			}
