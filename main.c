@@ -5,8 +5,8 @@
 int main(void){
 	system("clear");
 	while(TRUE){
+		system("clear");
 		int opcion=-1;
-
 		while(TRUE){
 			printf("		----------------------MENÚ----------------------\n");
 			printf("		||||                                        ||||\n");
@@ -21,6 +21,7 @@ int main(void){
 			printf("Ingrese el número de la opción a escoger: ");
 			scanf("%d",&opcion);
 			//Verificando que se ingrese una opción válida
+			while (getchar() != '\n');
 			if(opcion>4 || opcion<1){
 				printf("\n\nOpción inválida\n");
 			}else{
