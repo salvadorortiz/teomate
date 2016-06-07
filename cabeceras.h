@@ -11,6 +11,7 @@ void modulo1(void);
 void modulo2(void);
 void modulo3(void);
 const char * leerArchivo(char *);
+const char * leerArchivoCompleto(char *);
 char *concatenar(char *, char);
 
 //Variables
@@ -38,7 +39,21 @@ const char * leerArchivo(char * nombre_archivo){
  	return contenido; 
 }
 
-
+const char * leerArchivoCompleto(char * nombre_archivo){
+	FILE *archivo;
+ 	char* contenido = malloc(sizeof(archivo)*TAM);
+ 	char caracter;
+ 	archivo = fopen ( nombre_archivo, "r" );
+ 	int i =0;
+ 	while(feof(archivo)== 0)
+	 {
+	 	char x = fgetc(archivo);
+	 	contenido[i] =x;
+	 	i++;
+	 }
+ 	fclose (archivo);
+ 	return contenido;
+}
 char *concatenar_caracter(char *cadena, char caracter){ 
    int i;
    //Se busca el final de la cadena
