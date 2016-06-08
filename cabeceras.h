@@ -64,3 +64,44 @@ char *concatenar_caracter(char *cadena, char caracter){
    cadena[i] = '\0';
    return cadena; 
 }
+
+char **obtener_estados(const char* NDFA, char tipo ){
+	int i=0,j=0,k=0,l=0;
+	char** estados= (char **)malloc (1000*sizeof(char *));
+	for (i=0;i<1000;i++)
+		estados[i] = (char *) malloc (1000*sizeof(char));
+	int flag = 0;
+	char caracter;
+	int fileLenght = ( strlen(NDFA));
+	char* contenido = malloc(sizeof(char));
+	char y;
+	int aumentarL = 0;
+	for (i=0;i <=fileLenght ; i++)
+	{
+		do
+		{
+			caracter = NDFA[j];
+			if(caracter == tipo){
+				flag = 1;
+				aumentarL = 0;
+			}else if (flag == 1 && caracter!= '=' && caracter!= '{' && caracter!= '}' && caracter!= ','){
+				printf ("i=%d k=%d char= %c \n",l,k,caracter);
+				estados[l][k] = caracter;
+				k++;
+				aumentarL = 1;
+			}else if (caracter == '}' || caracter == 0 ){
+				flag = 0;
+				j++;
+				aumentarL = 0;
+				break;
+			}
+			j++;
+		}while(caracter != ',' );
+		k = 0;
+		if (aumentarL==1){
+			l++;
+			aumentarL= 0;
+		}
+	}
+	return estados;
+}

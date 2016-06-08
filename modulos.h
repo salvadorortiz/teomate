@@ -116,7 +116,9 @@ void modulo1(void){
 }
 
 void modulo2(void){
-	printf("Modulo 2\n");
+	int i=0,j=0,k=0; 
+	const char* NDFA = leerArchivoCompleto("expresion_regular.txt");
+	char** estados= obtener_estados(NDFA, 'E');
 }
 
 void modulo3(void){
