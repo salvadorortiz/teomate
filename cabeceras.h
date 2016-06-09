@@ -65,6 +65,56 @@ char *concatenar_caracter(char *cadena, char caracter){
    return cadena; 
 }
 
+char *obtenerEstadoEspecifico(char** estados,int i){
+	int j=0;
+	char* estado = (char *) malloc (1000*sizeof(char));
+	do{
+		estado[j] = estados[i][j];
+		j++;
+	}while(estados[i][j] != '|' );
+	printf("estado %s \n", estados[i]);
+	return estado;
+}
+char *concatenarEstado(char* estados, char* estado){
+	printf("concatenando\n");
+	int i = 0,j=0;
+	char c ;
+	char* MetaEstado = (char *) malloc (1000*sizeof(char));
+	while(estados[i]!='|'){
+		MetaEstado[i]= estados[i];
+		i++;
+	};
+	while(estados[j]!='|'){
+		MetaEstado[i]= estados[j];
+		j++;
+		i++;
+	};
+	MetaEstado[i]='|';
+	return MetaEstado;
+}
+void imprimirEstados(char** estados){
+	int i=0,j=0;
+	for (i=0; i< 5 ;i++){
+		for (j=0; j< 5 ;j++){
+			if (estados[i][j] != '|')
+				printf("i: %d j: %d c: %c \n",i,j, estados[i][j]);
+			else
+				break;
+		}
+		if (estados[i][0] == '|'){
+			break;
+		}
+			
+	}
+}
+int obtenerCantidadEstados(char** estados){
+	int i=0;
+	while(estados[i][0] != '|'){
+		i++;
+	}
+	return i;
+}
+
 char **obtener_estados(const char* NDFA, char tipo ){
 	int i=0,j=0,k=0,l=0;
 	char** estados= (char **)malloc (1000*sizeof(char *));
@@ -85,11 +135,13 @@ char **obtener_estados(const char* NDFA, char tipo ){
 				flag = 1;
 				aumentarL = 0;
 			}else if (flag == 1 && caracter!= '=' && caracter!= '{' && caracter!= '}' && caracter!= ','){
-				printf ("i=%d k=%d char= %c \n",l,k,caracter);
+				printf (" 1 i=%d k=%d char= %c \n",l,k,caracter);
 				estados[l][k] = caracter;
 				k++;
 				aumentarL = 1;
 			}else if (caracter == '}' || caracter == 0 ){
+				estados[l][k] = '|';
+				l++;
 				flag = 0;
 				j++;
 				aumentarL = 0;
@@ -97,11 +149,15 @@ char **obtener_estados(const char* NDFA, char tipo ){
 			}
 			j++;
 		}while(caracter != ',' );
-		k = 0;
 		if (aumentarL==1){
+			estados[l][k] = '|';
+			
 			l++;
 			aumentarL= 0;
 		}
+		k = 0;
+		
 	}
+	estados[l+1][0] = '|';
 	return estados;
 }

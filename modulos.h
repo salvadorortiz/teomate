@@ -116,9 +116,25 @@ void modulo1(void){
 }
 
 void modulo2(void){
-	int i=0,j=0,k=0; 
+	int i=0,j=0,k=0,pos =0; 
 	const char* NDFA = leerArchivoCompleto("expresion_regular.txt");
-	char** estados= obtener_estados(NDFA, 'E');
+	char** estados= obtener_estados(NDFA, 'Q');
+	int cantidadEstados = obtenerCantidadEstados(estados);
+	char** metaEstados= (char **)malloc (2000*sizeof(char *));
+	for (i=0;i<2000;i++)
+		metaEstados[i] = (char *) malloc (2000*sizeof(char));
+	for (i=0; i < cantidadEstados; i++){
+		for(j=0;j<cantidadEstados; j++){
+			if (k == 0){
+				metaEstados[pos] = obtenerEstadoEspecifico(estados,j);
+				pos++;
+			}else{
+				metaEstados[pos]= concatenarEstado(estados[j], estados[j]);
+			}
+		}
+		k=1;
+	}
+	printf("Cantidad de estados: %d\n" , obtenerCantidadEstados(estados));
 }
 
 void modulo3(void){
