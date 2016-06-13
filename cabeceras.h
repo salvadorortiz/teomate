@@ -25,6 +25,76 @@ const char * error_and = "\n\n\nERROR DE SINTAXIS: se encontró una expresión i
 const char * error_simbolo = "\n\n\nERROR DE SINTAXIS: se esperaba un operador luego del simbolo del alfabeto: ";
 const char * continuar = "Presione ENTER para continuar";
 
+typedef struct transicion
+{
+	char* estado;
+	char valor;
+	char* estadosiguiente;
+}Transicion;
+
+Transicion* obtenerTransiciones(const char* NDFA)
+{
+	Transicion* transiciones = (Transicion *) malloc (1000*sizeof(Transicion));
+	
+	int i=0, fileLenght = ( strlen(NDFA));
+	int flagTransicion = 0;
+	int flagDeclaracion = 0;
+	int j =0;
+	int k = 0;
+	for (i=0;i <=fileLenght ; i++)
+	{		
+		if (NDFA[i] == 'T'){
+			
+			flagTransicion =1;
+		}else if(NDFA[i] == '\n' && flagTransicion == 1){
+			flagTransicion = 0;
+		}
+		if (flagTransicion == 1)
+		{
+			
+			if (NDFA[i] == '(')
+			{
+				i++;
+				j=0;
+				transiciones[k].estado = (char *) malloc (1000*sizeof(char));
+				while(NDFA[i] != ',')
+				{
+					transiciones[k].estado[j] = NDFA[i];
+					i++;
+					j++;
+				}
+				j=0;
+				i++;
+				transiciones[k].valor = NDFA[i];
+				i++;
+			}
+			
+			if (NDFA[i] == '{')
+			{
+				i++;
+				transiciones[k].estadosiguiente = (char *) malloc (1000*sizeof(char));
+				while(NDFA[i]!='}')
+				{
+					transiciones[k].estadosiguiente[j]=NDFA[i] ;
+					j++;
+					i++;
+				}
+				k++;
+				flagTransicion = 0;
+			}
+			else if (NDFA[i] == '0')
+			{
+				transiciones[k].estadosiguiente = (char *) malloc (1000*sizeof(char));
+				transiciones[k].estadosiguiente[0]=NDFA[i] ;
+				k++;
+				flagTransicion = 0;
+			}			
+		}
+	}
+	return transiciones;
+}
+
+
 //Definición de funciones
 const char * leerArchivo(char * nombre_archivo){
 	//Apertura y lectura del archivo pasado por parametro
