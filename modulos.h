@@ -146,5 +146,65 @@ void modulo2(void){
 }
 
 void modulo3(void){
-	printf("Modulo 3\n");
+	int i = 0;	
+	char * archivo = (char *) leerArchivoCompleto("simulador.txt");
+	char * palabra;
+	char * modo;
+	char * estados;
+	char * alfabeto;
+	char * inicial;
+	char * finales;
+	char * transicion;
+	char * token = strtok(archivo,"\n");
+
+	while(token != NULL){
+    	//printf( " %s\n", token );
+		switch(i){
+			case 0: //Obtengo la palabra
+				palabra = token;
+				i++;
+				break;
+			case 1: //Obtengo si es DFA o NDFA
+				modo = token;
+				i++;
+				break;
+			case 2: //Obtengo los estados
+				estados = token;
+				i++;
+				break;
+			case 3: //Obtengo los simbolos del alfabeto
+				alfabeto = token;
+				i++;
+				break;
+			case 4: //Obtengo el estado inicial
+				inicial = token;
+				i++;
+				break;
+			case 5: //Obtengo los estados finales
+				finales = token;
+				i++;
+				break;
+			case 6: //Estamos en la función de transición
+				break;
+
+		}
+		token = strtok(NULL, "\n");
+		if(i == 6) break;
+	}
+
+	printf("Palabra:%s\n", palabra);
+	printf("Modo: %s\n", modo);
+	printf("estados: %s\n", estados);
+	printf("alfabeto: %s\n", alfabeto);
+	printf("inicial: %s\n", inicial);
+	printf("finales: %s\n", finales);
+
+	/*while(token != NULL){
+		printf( " %s\n", token );
+		token = strtok(NULL, "\n");
+	}*/
+
+
+	printf("\n\n\n%s", continuar);
+	getchar();
 }
