@@ -149,6 +149,7 @@ void modulo3(void){
 	char* archivo = (char *) leerArchivoCompleto("simulador.txt");
 	char* palabra = obtenerPalabra(archivo);
 	char modo = obtenerModo(archivo);
+	char* estado_finales = obtenerEstadosFinales(archivo);
 	char* estado_actual = obtenerEstadoInicial(archivo);
 	printf("\nEvaluación de la palabra: %s\n\n", palabra);
 	if(modo == '1'){ //Se trabaja con DFA
@@ -181,6 +182,13 @@ void modulo3(void){
 			getchar();
 			i=0;
 		}
+		char* aceptacion = strstr(estado_finales, estado_actual);
+		if(aceptacion != NULL){
+			printf("La palabra: %s, pertenece al L(M)\n",palabra);
+		}else{
+			printf("La palabra: %s, no pertenece al L(M)\n",palabra);
+		}
+
 	}else{
 		printf("NDFA\n");
 	}

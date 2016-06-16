@@ -255,7 +255,6 @@ char* obtenerPalabra(const char* DFA){
 char* obtenerEstadoInicial(const char* DFA){
 	int i = 0;
 	int j = 0;
-	int bandera = 0;
 	char* estado_inicial = (char *) malloc(sizeof(char)*TAM);
 	while(DFA[i] != 'S'){
 		i++;
@@ -269,15 +268,21 @@ char* obtenerEstadoInicial(const char* DFA){
 	return estado_inicial;
 }
 
-/*char* obtenerPalabraRestante(char* palabra, int i){
-	char* palabra_aux = (char *) malloc(sizeof(char)*TAM);
-	int l = 0; 
-	for(k=j+1; k<(strlen(palabra)); k++){
-		printf("ENTRA%d\n", k);
-		palabra_aux[l] = palabra[k];
-		l++;
+char* obtenerEstadosFinales(const char* DFA){
+	int i = 0;
+	int j = 0;
+	char* estados_finales = (char *) malloc(sizeof(char)*TAM);
+	while(DFA[i] != 'F'){
+		i++;
 	}
-}*/
+	i=i+2;
+	while(DFA[i+1] != '\n'){
+		estados_finales[j]=DFA[i];
+		i++;
+		j++;
+	}
+	return estados_finales;
+}
 
 Transicion* obtenerTransicionesDFA(const char* DFA){
 	Transicion* transiciones = (Transicion *) malloc(sizeof(Transicion)*TAM);
