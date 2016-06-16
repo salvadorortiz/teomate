@@ -94,7 +94,6 @@ Transicion* obtenerTransiciones(const char* NDFA)
 	return transiciones;
 }
 
-
 //Definición de funciones
 const char * leerArchivo(char * nombre_archivo){
 	//Apertura y lectura del archivo pasado por parametro
@@ -116,11 +115,11 @@ const char * leerArchivoCompleto(char * nombre_archivo){
  	archivo = fopen ( nombre_archivo, "r" );
  	int i =0;
  	while(feof(archivo)== 0)
-	 {
-	 	char x = fgetc(archivo);
-	 	contenido[i] =x;
-	 	i++;
-	 }
+	{
+		char x = fgetc(archivo);
+		contenido[i] =x;
+		i++;
+	}
  	fclose (archivo);
  	return contenido;
 }
@@ -230,4 +229,108 @@ char **obtener_estados(const char* NDFA, char tipo ){
 	}
 	estados[l+1][0] = '|';
 	return estados;
+}
+
+char obtenerModo(const char* DFA){
+	int i = 0;
+	char modo;
+	int longitud = (strlen(DFA));
+	for (i=0; i <=longitud; i++){
+		if(DFA[i]=='\n'){
+			return modo= DFA[i+1];
+		}
+	}
+}
+
+char* obtenerPalabra(const char* DFA){
+	int i = 0;
+	char* palabra = (char *) malloc(sizeof(char)*TAM);
+	while(DFA[i+1] != '\n'){
+		palabra[i]=DFA[i];
+		i++;
+	}
+	return palabra;
+}
+
+char* obtenerEstadoInicial(const char* DFA){
+	int i = 0;
+	int j = 0;
+	int bandera = 0;
+	char* estado_inicial = (char *) malloc(sizeof(char)*TAM);
+	while(DFA[i] != 'S'){
+		i++;
+	}
+	i=i+2;
+	while(DFA[i+1] != '\n'){
+		estado_inicial[j]=DFA[i];
+		i++;
+		j++;
+	}
+	return estado_inicial;
+}
+
+/*char* obtenerPalabraRestante(char* palabra, int i){
+	char* palabra_aux = (char *) malloc(sizeof(char)*TAM);
+	int l = 0; 
+	for(k=j+1; k<(strlen(palabra)); k++){
+		printf("ENTRA%d\n", k);
+		palabra_aux[l] = palabra[k];
+		l++;
+	}
+}*/
+
+Transicion* obtenerTransicionesDFA(const char* DFA){
+	Transicion* transiciones = (Transicion *) malloc(sizeof(Transicion)*TAM);
+	
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int longitud = (strlen(DFA));
+	int bandera_transicion = 0;
+
+	while(i <= longitud){
+		if (DFA[i] == 'T'){
+			bandera_transicion = 1;
+		}
+
+		if (bandera_transicion == 1){
+			if (DFA[i] == '('){
+				i++;
+				j=0;
+				transiciones[k].estado = (char *) malloc(sizeof(char)*TAM);
+				while(DFA[i] != ','){
+					//Ingreso del estado a la estructura
+					transiciones[k].estado[j] = DFA[i];
+					i++;
+					j++;
+				}
+				j=0;
+				i++;
+				//Ingreso del simbolo a la estructura
+				transiciones[k].valor = DFA[i];
+			}
+			
+			if (DFA[i] == '='){
+				i++;
+				if(DFA[i]==' '){
+					i++;
+				}
+				transiciones[k].estadosiguiente = (char *) malloc(sizeof(char)*TAM);
+				while(DFA[i+1]!='\n'){
+					//Ingreso de los estados generados por la transicion
+					transiciones[k].estadosiguiente[j]=DFA[i] ;
+					j++;
+					i++;
+					//Validacion para no generar loop infinito en caso de olvidar salto de linea al final del archivo
+					if(i > longitud-2){
+						break;
+					}
+				}
+				k++;
+				bandera_transicion = 0;
+			}	
+		}
+		i++;
+	}
+	return transiciones;
 }

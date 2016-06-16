@@ -1,12 +1,12 @@
-0101
+ababa
 1
-Q={a,b,c}
-E={0,1}
-S=a
-F={c}
-T(a,0) = a
-T(a,1) = b
-T(b,0) = a
-T(b,1) = c
-T(c,0) = c
-T(c,1) = c
+Q={q0,q1,q2}
+E={a,b}
+S=q0
+F={q1,q2}
+T(q0,a)=q0
+T(q0,b)=q1
+T(q1,a)=q1
+T(q1,b)=q2
+T(q2,a)=q2
+T(q2,b)=q2

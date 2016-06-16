@@ -25,6 +25,7 @@ void modulo1(void){
 		}
 		switch(expresion_regular[i]){
 			case 40: // (
+				printf("(");
 				contador_apertura++;
 				if(i+1<longitud){
 					//Validación del simbolo (
@@ -36,7 +37,7 @@ void modulo1(void){
 				}
 				break;
 			case 41:// )
-				printf(", esto");
+				printf("), esto");
 				contador_cierre++;
 				if(i+1<longitud){
 					//Validación del simbolo )
@@ -106,13 +107,12 @@ void modulo1(void){
 		}
 		i++;
 	}
-
+	printf(".");
 	if(contador_apertura != contador_cierre){
 		printf("\n\n%s\n", error_parentesis);
 	}
 	printf("\n\n\n%s", continuar);
 	getchar();
-
 }
 
 void modulo2(void){
@@ -146,15 +146,55 @@ void modulo2(void){
 }
 
 void modulo3(void){
-	int i = 0;	
-	char * archivo = (char *) leerArchivoCompleto("simulador.txt");
+	char* archivo = (char *) leerArchivoCompleto("simulador.txt");
+	char* palabra = obtenerPalabra(archivo);
+	char modo = obtenerModo(archivo);
+	char* estado_actual = obtenerEstadoInicial(archivo);
+	printf("\nEvaluación de la palabra: %s\n\n", palabra);
+	if(modo == '1'){ //Se trabaja con DFA
+		Transicion* t = obtenerTransicionesDFA(archivo);
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		for(j=0; j<strlen(palabra); j++){
+			char* palabra_aux = (char *) malloc(sizeof(char)*TAM);
+			int l = 0;
+			for(k=j+1; k<(strlen(palabra)); ++k){
+				palabra_aux[l] = palabra[k];
+				l++;
+			}
+			
+			while (t[i+1].estado != NULL ){
+				//printf("valor:%c,simbolo:%c\n",t[i].valor,palabra[j]);
+				//printf("%d,%d\n",strlen(estado_actual),strlen(t[i].estado));
+				if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_actual) == 0)){
+					if(j!=strlen(palabra)-1){
+						printf("T(T(%s,%c),%s)=%s", t[i].estado,t[i].valor,palabra_aux,t[i].estadosiguiente);
+					}else{
+						printf("T(%s,%c)=%s", t[i].estado,t[i].valor,t[i].estadosiguiente);
+					}
+					estado_actual=t[i].estadosiguiente;
+					break;
+				}
+				i++;
+			}
+			getchar();
+			i=0;
+		}
+	}else{
+		printf("NDFA\n");
+	}
+
+
+
+
+	/*char * archivo = (char *) leerArchivoCompleto("simulador.txt");
 	char * palabra;
 	char * modo;
 	char * estados;
 	char * alfabeto;
 	char * inicial;
 	char * finales;
-	char * transicion;
 	char * token = strtok(archivo,"\n");
 
 	while(token != NULL){
@@ -197,12 +237,13 @@ void modulo3(void){
 	printf("estados: %s\n", estados);
 	printf("alfabeto: %s\n", alfabeto);
 	printf("inicial: %s\n", inicial);
-	printf("finales: %s\n", finales);
+	printf("finales: %s\n", finales);*/
+	
+	//char** estados= obtener_estados(DFA, 'Q');
+	//int cantidadEstados = obtenerCantidadEstados(estados);
 
-	/*while(token != NULL){
-		printf( " %s\n", token );
-		token = strtok(NULL, "\n");
-	}*/
+
+
 
 
 	printf("\n\n\n%s", continuar);
