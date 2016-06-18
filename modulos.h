@@ -117,13 +117,13 @@ void modulo1(void){
 
 void modulo2(void){
 	int i=0,j=0,k=0,pos =0; 
-	const char* NDFA = leerArchivoCompleto("NDFA.txt");
+	const char* NDFA = leerArchivoCompleto("simulador.txt");
 	char** estados= obtener_estados(NDFA, 'Q');
 	int cantidadEstados = obtenerCantidadEstados(estados);
 	Transicion* t = obtenerTransiciones(NDFA);
 	printf("\n---------------------Ejemplo de como accesar a transiciones  --------------------------\n");
 	int aux= (sizeof(t));
-	
+	printf("%s\n", *estados);
 	while (t[i].estado != NULL )
 	{
 		printf ("estado: %s, valor: %c, estadosSiguientes %s\n",t[i].estado, t[i].valor, t[i].estadosiguiente);	
@@ -152,6 +152,7 @@ void modulo3(void){
 	char* estado_finales = obtenerEstadosFinales(archivo);
 	char* estado_actual = obtenerEstadoInicial(archivo);
 	printf("\nEvaluación de la palabra: %s\n\n", palabra);
+	
 	if(modo == '1'){ //Se trabaja con DFA
 		Transicion* t = obtenerTransicionesDFA(archivo);
 		int i = 0;
@@ -166,8 +167,6 @@ void modulo3(void){
 			}
 			
 			while (t[i+1].estado != NULL ){
-				//printf("valor:%c,simbolo:%c\n",t[i].valor,palabra[j]);
-				//printf("%d,%d\n",strlen(estado_actual),strlen(t[i].estado));
 				if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_actual) == 0)){
 					if(j!=strlen(palabra)-1){
 						printf("T(T(%s,%c),%s)=%s", t[i].estado,t[i].valor,palabra_aux,t[i].estadosiguiente);
@@ -188,71 +187,62 @@ void modulo3(void){
 		}else{
 			printf("La palabra: %s, no pertenece al L(M)\n",palabra);
 		}
-
 	}else{
-		printf("NDFA\n");
-	}
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		Transicion* t = obtenerTransicionesDFA(archivo);
+		for(j=0; j<strlen(palabra); j++){
+			char* palabra_aux = (char *) malloc(sizeof(char)*TAM);
+			char* estado_aux = (char *) malloc(sizeof(char)*TAM);
+			int l = 0;
+			for(k=j+1; k<(strlen(palabra)); ++k){
+				palabra_aux[l] = palabra[k];
+				l++;
+			}
+			while (t[i+1].estado != NULL ){
+				if(j==0){ //Se vealua solamente el simbolo inicial
+					if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_actual) == 0)){
+						if(j!=strlen(palabra)-1){
+							printf("T(T(%s,%c),%s)=%s\n", t[i].estado,t[i].valor,palabra_aux,t[i].estadosiguiente);
+						}else{
+							printf("T(%s,%c)=%s\n", t[i].estado,t[i].valor,t[i].estadosiguiente);
+						}
+						estado_actual=t[i].estadosiguiente;
+						break;
+					}
+				}else{
+					if(estado_actual[0]=='!'){// Si despues de evaluar el simbolo incial queda vacio entonces se rechaza
+						printf("\nLa palabra: %s, no pertenece al L(M)\n",palabra);
+						j=strlen(palabra);
+						break;
+					}
+					//Falta evaluar el resto de la palabra con los estados del tipo {q0,q2}, {q1}, {q0,q1,q2}, etc...
 
 
 
+					/* INTENTO FALLIDO
+					int m = 1;
+					int n = 0;
+					//printf("%s\n", estado_actual);
+					for(m=1; m<(strlen(estado_actual)-1); m++){
+						//printf("%c\n",estado_actual[m]);
+						while(estado_actual[m]!=','){
+							estado_aux[n]=estado_actual[m];
+							n++;
+							m++;
+						}
+						printf("ESTADO_AUX: %s\n", estado_aux);
+						if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_aux) == 0)){
+							printf("T(T(%s,%c),%s)=", estado_actual,palabra[j],palabra_aux);
+						}
+					}*/
 
-	/*char * archivo = (char *) leerArchivoCompleto("simulador.txt");
-	char * palabra;
-	char * modo;
-	char * estados;
-	char * alfabeto;
-	char * inicial;
-	char * finales;
-	char * token = strtok(archivo,"\n");
-
-	while(token != NULL){
-    	//printf( " %s\n", token );
-		switch(i){
-			case 0: //Obtengo la palabra
-				palabra = token;
+				}
 				i++;
-				break;
-			case 1: //Obtengo si es DFA o NDFA
-				modo = token;
-				i++;
-				break;
-			case 2: //Obtengo los estados
-				estados = token;
-				i++;
-				break;
-			case 3: //Obtengo los simbolos del alfabeto
-				alfabeto = token;
-				i++;
-				break;
-			case 4: //Obtengo el estado inicial
-				inicial = token;
-				i++;
-				break;
-			case 5: //Obtengo los estados finales
-				finales = token;
-				i++;
-				break;
-			case 6: //Estamos en la función de transición
-				break;
-
+			}
 		}
-		token = strtok(NULL, "\n");
-		if(i == 6) break;
 	}
-
-	printf("Palabra:%s\n", palabra);
-	printf("Modo: %s\n", modo);
-	printf("estados: %s\n", estados);
-	printf("alfabeto: %s\n", alfabeto);
-	printf("inicial: %s\n", inicial);
-	printf("finales: %s\n", finales);*/
-	
-	//char** estados= obtener_estados(DFA, 'Q');
-	//int cantidadEstados = obtenerCantidadEstados(estados);
-
-
-
-
 
 	printf("\n\n\n%s", continuar);
 	getchar();

@@ -82,7 +82,7 @@ Transicion* obtenerTransiciones(const char* NDFA)
 				k++;
 				flagTransicion = 0;
 			}
-			else if (NDFA[i] == '0')
+			else if (NDFA[i] == '!')
 			{
 				transiciones[k].estadosiguiente = (char *) malloc (1000*sizeof(char));
 				transiciones[k].estadosiguiente[0]=NDFA[i] ;
