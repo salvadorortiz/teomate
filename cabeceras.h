@@ -32,6 +32,69 @@ typedef struct transicion
 	char* estadosiguiente;
 }Transicion;
 
+int potencia(int b,int e){
+    int i;
+    int pot=1;
+    for(i=1;i<=e;i++){
+          pot=pot*b;
+    }
+    return pot;
+}
+char** cleanStates(char** estados, int cantidadEstados){
+	int i =0;
+	char** estadosLimpios = (char **)malloc (1000*sizeof(char *));
+	for (i=0;i<1000;i++)
+		estadosLimpios[i] = (char *) malloc (1000*sizeof(char));
+		
+	for(i=0; i<cantidadEstados; i++){
+		printf("start");
+		estados[i][strlen(estados[i])-1]='\0';
+		printf("%s\n",estados[i]);
+		estadosLimpios[i] = estados[i];
+	}
+	return	estadosLimpios;
+}
+char** obtenerMetas(char** estados, int limite){
+	int i,j;
+	char** metaEstados = (char **)malloc (1000*sizeof(char *));
+	for (i=0;i<1000;i++)
+		metaEstados[i] = (char *) malloc (1000*sizeof(char));
+    
+    for(i=0;i<potencia(2,limite);i++){
+    	char* metaTemp = (char *) malloc (1000*sizeof(char));
+        for(j=0;j<limite;j++){
+          if(i & (1<<j)){
+          	strcat(metaTemp, estados[j]);
+		  }
+        }
+        metaEstados[i] = metaTemp;
+    }
+    return metaEstados;
+}
+
+Transicion buscarEstado(char* estado, Transicion* todosLosEstados){
+	int sizeEstados= (sizeof(todosLosEstados));
+	Transicion def;
+	int i = 0, j = 0;
+	for(i=0; i<sizeEstados; i++){
+		int sizeEstado = (sizeof(todosLosEstados[i].estado));
+		int flag = 0;
+		for (j=0; j<sizeEstado; j++){
+			if (todosLosEstados[i].estado != NULL && todosLosEstados[i].estado[j] == estado[j]){
+				flag = 1;
+			}else{
+				flag = 0;
+				break;
+			}
+		}
+		if (flag ==1)
+		{
+			return todosLosEstados[i];
+		}
+	}
+	return def;
+}
+
 Transicion* obtenerTransiciones(const char* NDFA)
 {
 	Transicion* transiciones = (Transicion *) malloc (1000*sizeof(Transicion));

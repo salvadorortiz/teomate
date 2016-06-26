@@ -120,10 +120,18 @@ void modulo2(void){
 	const char* NDFA = leerArchivoCompleto("simulador.txt");
 	char** estados= obtener_estados(NDFA, 'Q');
 	int cantidadEstados = obtenerCantidadEstados(estados);
-	Transicion* t = obtenerTransiciones(NDFA);
+	char** estadosLimpios = cleanStates(estados,cantidadEstados);
+	char** MetaEstados = obtenerMetas(estadosLimpios,cantidadEstados);
+	int aux = potencia(2,cantidadEstados);
+	for (i=0; i<aux;i++){
+		printf("%s\n",MetaEstados[i]);
+	}
+	/*Transicion* t = obtenerTransiciones(NDFA);
+	printf("\n---------------------Buscar estado--------------------------\n");
+	buscarEstado("q3", t);
+	printf("\n-----------------------------------------------\n");
 	printf("\n---------------------Ejemplo de como accesar a transiciones  --------------------------\n");
 	int aux= (sizeof(t));
-	printf("%s\n", *estados);
 	while (t[i].estado != NULL )
 	{
 		printf ("estado: %s, valor: %c, estadosSiguientes %s\n",t[i].estado, t[i].valor, t[i].estadosiguiente);	
@@ -140,7 +148,7 @@ void modulo2(void){
 			pos++;
 		}
 		k=1;
-	}
+	}*/
 	
 	printf("Cantidad de estados: %d\n" , obtenerCantidadEstados(estados));
 }
