@@ -1,15 +1,14 @@
 #include "cabeceras.h"
-/*
-OPERADORES:
-	40	(  delimitador apertura
-	41	)  delimitador cierre
-	42	*  cerradura de Kleene
-	94	^  cerradura positiva de Kleene
-	43	+  OR
-	46	.  Y
+
+/** 
+	Funcion encargada de interpretar la expresion regular ingresada en el archivo modulo1.txt
+	Interpretacion realizada en tiempo de evaluacion, es decir, a medida se lee el caracter 
+	este es interpretado y mostrado al usuario en pantalla.
+
+	__name__:	modulo1		
 */
 void modulo1(void){
-	const char* expresion_regular = leerArchivo("expresion_regular.txt");
+	const char* expresion_regular = leerArchivo("modulo1.txt");
 	int longitud = strlen(expresion_regular);
 	int i=0;
 	int contador_apertura=0;
@@ -17,7 +16,7 @@ void modulo1(void){
 
 	printf("\n%s es el lenguaje que contiene ", expresion_regular);
 	while(i<longitud){
-		//Validación de parentesis
+		//VALIDACION DE PARENTESIS APERTURA-CIERRE
 		if(contador_apertura<contador_cierre){
 			i=longitud+1;
 			printf("\n\n%s\n", error_parentesis);
@@ -28,7 +27,7 @@ void modulo1(void){
 				printf("(");
 				contador_apertura++;
 				if(i+1<longitud){
-					//Validación del simbolo (
+					//VALIDACION DEL SIMBOLO (
 					if(expresion_regular[i+1]==')' || expresion_regular[i+1]=='+' || expresion_regular[i+1]=='*' || expresion_regular[i+1]=='.' || expresion_regular[i+1]=='^'){
 						i=longitud+1;
 						printf("\n\n%s\n", error_apertura);
@@ -40,7 +39,7 @@ void modulo1(void){
 				printf("), esto");
 				contador_cierre++;
 				if(i+1<longitud){
-					//Validación del simbolo )
+					//VALIDACION DEL SIMBOLO )
 					if(expresion_regular[i+1]!='+' && expresion_regular[i+1]!='.' && expresion_regular[i+1]!='*' && expresion_regular[i+1]!='^'){
 						i=longitud+1;
 						printf("\n\n%s\n", error_cierre);
@@ -51,7 +50,7 @@ void modulo1(void){
 			case 42:// *
 				printf(", cero o mas veces");
 				if(i+1<longitud){
-					//Validación del simbolo *
+					//VALIDACION DEL SIMBOLO *
 					if(expresion_regular[i+1]!='+' && expresion_regular[i+1]!='.' && expresion_regular[i+1]!=')'){
 						i=longitud+1;
 						printf("\n\n%s\n", error_kleene);
@@ -62,7 +61,7 @@ void modulo1(void){
 			case 94:// ^
 				printf(" una o mas veces");
 				if(i+1<longitud){
-					//Validación del simbolo ^
+					//VALIDACION DEL SIMBOLO ^
 					if(expresion_regular[i+1]!='+' && expresion_regular[i+1]!='.' && expresion_regular[i+1]!=')'){
 						i=longitud+1;
 						printf("\n\n%s\n", error_kleene_positiva);
@@ -73,7 +72,7 @@ void modulo1(void){
 			case 43:// +
 				printf(" o ");
 				if(i+1<longitud){
-					//Validación del simbolo +
+					//VALIDACION DEL SIMBOLO +
 					if(expresion_regular[i+1]==')' || expresion_regular[i+1]=='+' || expresion_regular[i+1]=='*' || expresion_regular[i+1]=='.' || expresion_regular[i+1]=='^'){
 						i=longitud+1;
 						printf("\n\n%s\n", error_or);
@@ -84,7 +83,7 @@ void modulo1(void){
 			case 46:// .
 				printf(" concatenado con ");
 				if(i+1<longitud){
-					//Validación del simbolo .
+					//VALIDACION DEL SIMBOLO .
 					if(expresion_regular[i+1]==')' || expresion_regular[i+1]=='+' || expresion_regular[i+1]=='*' || expresion_regular[i+1]=='.' || expresion_regular[i+1]=='^'){
 						i=longitud+1;
 						printf("\n\n%s\n", error_and);
@@ -95,7 +94,7 @@ void modulo1(void){
 			default:
 				printf("%c", expresion_regular[i]);
 				if(i+1<longitud){
-					//Validación de los simbolos del alfabeto
+					//VALIDACIONES DE LOS SIMBOLOS DEL ALFABETO
 					if(expresion_regular[i+1]!='+' && expresion_regular[i+1]!='.' && expresion_regular[i+1]!=')' && expresion_regular[i+1]!='*' && expresion_regular[i+1]!='^'){
 						printf("\n\n%s", error_simbolo);
 						printf("%c", expresion_regular[i]);
@@ -115,9 +114,15 @@ void modulo1(void){
 	getchar();
 }
 
+/** 
+	Funcion encargada de traducir el NDFA ingresado en el archivo modulo2.txt a un DFA.
+	-----------------AGREGAR UN POCO DE DETALLE-----------------------
+
+	__name__:	modulo2		
+*/
 void modulo2(void){
 	int i=0,j=0,k=0,pos =0; 
-	const char* NDFA = leerArchivoCompleto("simulador.txt");
+	const char* NDFA = leerArchivoCompleto("NDFA.txt");
 	char** estados= obtener_estados(NDFA, 'Q');
 	int cantidadEstados = obtenerCantidadEstados(estados);
 	Transicion* t = obtenerTransiciones(NDFA);
@@ -145,15 +150,20 @@ void modulo2(void){
 	printf("Cantidad de estados: %d\n" , obtenerCantidadEstados(estados));
 }
 
+/** 
+	Funcion encargada de evaluar la cadena segun el modo y la definicion del automata especificado
+	en el archivo modulo3.txt.
+
+	__name__:	modulo3		
+*/
 void modulo3(void){
-	char* archivo = (char *) leerArchivoCompleto("simulador.txt");
+	char* archivo = (char *) leerArchivoCompleto("modulo3.txt");
 	char* palabra = obtenerPalabra(archivo);
 	char modo = obtenerModo(archivo);
 	char* estado_finales = obtenerEstadosFinales(archivo);
 	char* estado_actual = obtenerEstadoInicial(archivo);
-	printf("\nEvaluación de la palabra: %s\n\n", palabra);
-	
-	if(modo == '1'){ //Se trabaja con DFA
+	printf("\nEvaluacion de la palabra: %s\n\n", palabra);
+	if(modo == '1'){ //SE TRABAJA CON DFA
 		Transicion* t = obtenerTransicionesDFA(archivo);
 		int i = 0;
 		int j = 0;
@@ -166,17 +176,17 @@ void modulo3(void){
 				l++;
 			}
 			
-			while (t[i+1].estado != NULL ){
+			while (t[i].estado != NULL ){
 				if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_actual) == 0)){
 					if(j!=strlen(palabra)-1){
-						printf("T(T(%s,%c),%s)=%s", t[i].estado,t[i].valor,palabra_aux,t[i].estadosiguiente);
+						printf("T'(T(%s,%c),%s) = %s\n", t[i].estado,t[i].valor,palabra_aux,t[i].estadosiguiente);
 					}else{
-						printf("T(%s,%c)=%s", t[i].estado,t[i].valor,t[i].estadosiguiente);
+						printf("T(%s,%c) = %s\n", t[i].estado,t[i].valor,t[i].estadosiguiente);
 					}
 					estado_actual=t[i].estadosiguiente;
 					break;
 				}
-				i++;
+				i++;	
 			}
 			getchar();
 			i=0;
@@ -187,60 +197,147 @@ void modulo3(void){
 		}else{
 			printf("La palabra: %s, no pertenece al L(M)\n",palabra);
 		}
-	}else{
-		int i = 0;
-		int j = 0;
-		int k = 0;
+	}else{//SE TRABAJA CON NDFA
+		int i = 0;	//INDICE DE TRANSICIONES
+		int j = 0;	//INDICE PARA RECORRER LA PALABRA A EVALUAR
+		int k = 0;	//INDICE PARA RECORRER PORCION NO EVALUADA DE LA PALABRA
+		int rechazo = 0;
+		
 		Transicion* t = obtenerTransicionesDFA(archivo);
 		for(j=0; j<strlen(palabra); j++){
 			char* palabra_aux = (char *) malloc(sizeof(char)*TAM);
 			char* estado_aux = (char *) malloc(sizeof(char)*TAM);
+			char* estado_actual_aux = (char *) malloc(sizeof(char)*TAM);
 			int l = 0;
+			int n = 1;
 			for(k=j+1; k<(strlen(palabra)); ++k){
 				palabra_aux[l] = palabra[k];
 				l++;
 			}
 			while (t[i+1].estado != NULL ){
-				if(j==0){ //Se vealua solamente el simbolo inicial
+				if(j==0){ //SE EVALUA SOLAMENTE EL SIMBOLO INCIAL
 					if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_actual) == 0)){
 						if(j!=strlen(palabra)-1){
-							printf("T(T(%s,%c),%s)=%s\n", t[i].estado,t[i].valor,palabra_aux,t[i].estadosiguiente);
+							printf("T'(T(%s,%c),%s) = %s\n", t[i].estado,t[i].valor,palabra_aux,t[i].estadosiguiente);
 						}else{
-							printf("T(%s,%c)=%s\n", t[i].estado,t[i].valor,t[i].estadosiguiente);
+							printf("T(%s,%c) = %s\n", t[i].estado,t[i].valor,t[i].estadosiguiente);
 						}
 						estado_actual=t[i].estadosiguiente;
 						break;
 					}
 				}else{
-					if(estado_actual[0]=='!'){// Si despues de evaluar el simbolo incial queda vacio entonces se rechaza
-						printf("\nLa palabra: %s, no pertenece al L(M)\n",palabra);
+					if(estado_actual[0]=='!'){ //SE RECHAZA LA PALABRA DE QUEDAR CONJUNTO VACIO AL EVALUAR EL SIMBOLO INICIAL
+						printf("\n\nLa palabra: %s, no pertenece al L(M)\n",palabra);
 						j=strlen(palabra);
+						rechazo = 1;
 						break;
 					}
-					//Falta evaluar el resto de la palabra con los estados del tipo {q0,q2}, {q1}, {q0,q1,q2}, etc...
-
-
-
-					/* INTENTO FALLIDO
-					int m = 1;
-					int n = 0;
-					//printf("%s\n", estado_actual);
-					for(m=1; m<(strlen(estado_actual)-1); m++){
-						//printf("%c\n",estado_actual[m]);
-						while(estado_actual[m]!=','){
-							estado_aux[n]=estado_actual[m];
-							n++;
-							m++;
-						}
-						printf("ESTADO_AUX: %s\n", estado_aux);
-						if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_aux) == 0)){
-							printf("T(T(%s,%c),%s)=", estado_actual,palabra[j],palabra_aux);
-						}
-					}*/
-
 				}
 				i++;
 			}
+			if(j>0 && rechazo == 0){ //SE EVALUAN LOS DEMAS SIMBOLOS DE LA PALABRA, SI ES QUE LOS HAY.
+				if(j!=strlen(palabra)-1){ //IMPRESION EN PANTALLA DE LAS TRANSICIONES A EVALUAR
+					printf("T'(T(%s,%c),%s) = ", estado_actual,palabra[j],palabra_aux);
+				}else{
+					printf("T(%s,%c) = ", estado_actual,palabra[j]);
+				}
+				int m;
+				int g = 1;
+				int cantidad = contarEstados(estado_actual);
+				int bandera = 0;
+				int bandera2 = 0;
+				estado_actual_aux[0]='{';
+				for(m=0; m<(strlen(estado_actual)-1); m++){
+					int h = 0;//INDICE DE ESTADO_AUX
+					while(estado_actual[n]!=',' && estado_actual[n]!='}'){
+						estado_aux[h]=estado_actual[n];
+						n++;
+						h++;
+					}
+					int i=0;
+					while (t[i].estado != NULL ){ //CONJUNTO DE ESTADOS RESULTADOS DE LAS EVALUACIONES INDIVIDUALES
+						if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_aux) == 0)){
+							printf("T(%s,%c)", t[i].estado,t[i].valor);
+							bandera++;
+							if(bandera == cantidad){
+								printf(" = ");
+							}else{
+								printf(" U ");
+							}
+						}
+						i++;
+					}
+					n++;
+					m=n;
+				}
+				n=1;
+				for(m=0; m<(strlen(estado_actual)-1); m++){ //UNION DE LOS CONJUNTOS DE ESTADOS
+					int h = 0;//INDICE DE ESTADO_AUX
+					while(estado_actual[n]!=',' && estado_actual[n]!='}'){
+						estado_aux[h]=estado_actual[n];
+						n++;
+						h++;
+					}
+					i=0;
+					int f=0;
+					while (t[i].estado != NULL ){
+						if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_aux) == 0)){
+							printf("%s", t[i].estadosiguiente);
+							bandera2++;
+							if(bandera2 == cantidad){
+								printf(" = ");
+							}else{
+								printf(" U ");
+							}
+							while(f < strlen(t[i].estadosiguiente)){
+								if(t[i].estadosiguiente[f]!='{' && t[i].estadosiguiente[f]!='}'){
+									estado_actual_aux[g]=t[i].estadosiguiente[f];
+									g++;
+								}
+								f++;
+							}
+							if(bandera2 != cantidad){
+								estado_actual_aux[g]=',';
+								g++;
+							}
+						}
+						i++;
+					}
+					estado_actual_aux[g]='}';
+					n++;
+					m=n;
+				}
+
+				estado_actual = eliminarRepetidos(estado_actual_aux);
+				if(estado_actual[0]=='}'){ //SI NO HAY TRANSICION VALIDA, LA PALABRA ES RECHAZADA POR EL AUTOMATA
+					printf("!\n\nLa palabra: %s, no pertenece al L(M)\n",palabra);
+					j=strlen(palabra);
+					rechazo = 1;
+				}else{
+					printf("%s\n", estado_actual);
+				}
+			}
+			getchar();
+		}
+		i = 1;
+		k = 0;
+		while(i < strlen(estado_actual)){ //EVALUACION FINAL DE LA PALABRA
+			char* estado_actual_aux = (char *) malloc(sizeof(char)*TAM);
+			j = 0;
+			while(estado_actual[i] != ',' && estado_actual[i] != '}'){
+				estado_actual_aux[j]=estado_actual[i];
+				j++;
+				i++;
+			}
+			if(strstr(estado_finales, estado_actual_aux)!=NULL){ //SI EXISTE AL MENOS UN ESTADO FINAL, LA PALABRA SE ACEPTA
+				printf("La palabra: %s, pertenece al L(M)\n",palabra);
+				i = strlen(estado_actual);
+				k = 1;
+			}
+			i++;
+		}
+		if(k == 0 && rechazo == 0){ //SI NO EXISTE NINGUN ESTADO FINAL PRESENTE, LA PALABRA SE RECHAZA
+			printf("La palabra: %s, no pertenece al L(M)\n",palabra);
 		}
 	}
 

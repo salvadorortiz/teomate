@@ -1,0 +1,8 @@
+
+OPERADORES:
+	40	(  delimitador apertura
+	41	)  delimitador cierre
+	42	*  cerradura de Kleene
+	94	^  cerradura positiva de Kleene
+	43	+  OR
+	46	.  Y

@@ -1,14 +1,18 @@
 #include "stdio.h"
 #include "modulos.h"
 
+/** 
+	Funcion principal que se encarga de la gestion del menu y sus respectivas opciones
 
+	__name__:	main	
+*/
 int main(void){
-	system("clear");
 	while(TRUE){
-		system("clear");
+		//system("clear");
+		printf("\n\n\n");
 		int opcion=-1;
 		while(TRUE){
-			printf("		----------------------MENÚ----------------------\n");
+			printf("		----------------------MENU----------------------\n");
 			printf("		||||                                        ||||\n");
 			printf("		||||                                        ||||\n");
 			printf("		|||| 1. Interprete de expresiones regulares ||||\n");
@@ -18,9 +22,9 @@ int main(void){
 			printf("		||||                                        ||||\n");
 			printf("		||||                                        ||||\n");
 			printf("		------------------------------------------------\n");
-			printf("Ingrese el número de la opción a escoger: ");
+			printf("Ingrese el numero de la opcion a escoger: ");
 			scanf("%d",&opcion);
-			//Verificando que se ingrese una opción válida
+			//VERIFICACION DE INGRESO DE OPCION VALIDA
 			while (getchar() != '\n');
 			if(opcion>4 || opcion<1){
 				printf("\n\nOpción inválida\n");
@@ -30,16 +34,16 @@ int main(void){
 		}
 
 		switch(opcion){
-			case 1: //Interprete de expresiones regulares
+			case 1: //INTERPRETE DE EXPRESIONES REGULARES
 				modulo1();
 				break;
-			case 2: //Traductor de NDFA a DFA
+			case 2: //TRADUCTOR DE NDFA A DFA
 				modulo2();
 				break;
-			case 3: //Simulador de NDFA o DFA
+			case 3: //SIMULADOR DE NDFA O DFA
 				modulo3();
 				break;
-			case 4: //Salir	
+			case 4: //SALIR
 				return 0;
 		}
 	}
