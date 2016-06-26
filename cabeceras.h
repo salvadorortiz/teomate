@@ -15,13 +15,13 @@ const char * leerArchivoCompleto(char *);
 char *concatenar(char *, char);
 
 /**MENSAJES DE ERROR Y MENSAJE DE CONTINUAR*/
-const char * error_parentesis = "\n\n\nERROR DE SINTAXIS: número incorrecto de parentesis de cierre respecto a parentesis de apertura\n";
-const char * error_apertura = "\n\n\nERROR DE SINTAXIS: se encontró una expresión incorrecta luego de '('\n";
-const char * error_cierre = "\n\n\nERROR DE SINTAXIS: se encontró una expresión incorrecta luego de ')'\n";
-const char * error_kleene = "\n\n\nERROR DE SINTAXIS: se encontró una expresión incorrecta luego de '*'\n";
-const char * error_kleene_positiva = "\n\n\nERROR DE SINTAXIS: se encontró una expresión incorrecta luego de '^'\n";
-const char * error_or = "\n\n\nERROR DE SINTAXIS: se encontró una expresión incorrecta luego de '+'\n";
-const char * error_and = "\n\n\nERROR DE SINTAXIS: se encontró una expresión incorrecta luego de '.'\n";
+const char * error_parentesis = "\n\n\nERROR DE SINTAXIS: numero incorrecto de parentesis de cierre respecto a parentesis de apertura\n";
+const char * error_apertura = "\n\n\nERROR DE SINTAXIS: se encontro una expresion incorrecta luego de '('\n";
+const char * error_cierre = "\n\n\nERROR DE SINTAXIS: se encontro una expresion incorrecta luego de ')'\n";
+const char * error_kleene = "\n\n\nERROR DE SINTAXIS: se encontro una expresion incorrecta luego de '*'\n";
+const char * error_kleene_positiva = "\n\n\nERROR DE SINTAXIS: se encontro una expresion incorrecta luego de '^'\n";
+const char * error_or = "\n\n\nERROR DE SINTAXIS: se encontro una expresion incorrecta luego de '+'\n";
+const char * error_and = "\n\n\nERROR DE SINTAXIS: se encontro una expresion incorrecta luego de '.'\n";
 const char * error_simbolo = "\n\n\nERROR DE SINTAXIS: se esperaba un operador luego del simbolo del alfabeto: ";
 const char * continuar = "Presione ENTER para continuar";
 
@@ -173,7 +173,7 @@ Transicion* obtenerTransiciones(const char* NDFA){
 */
 const char * leerArchivo(char * nombre_archivo){
 	FILE *archivo;
- 	char* contenido = malloc(sizeof(archivo)*TAM);
+ 	char* contenido = (char*) malloc(sizeof(archivo)*TAM);
  	archivo = fopen ( nombre_archivo, "r" );
  	fscanf(archivo, "%s" ,contenido);
  	fclose (archivo);
@@ -189,7 +189,7 @@ const char * leerArchivo(char * nombre_archivo){
 */
 const char * leerArchivoCompleto(char * nombre_archivo){
 	FILE *archivo;
- 	char* contenido = malloc(sizeof(archivo)*TAM);
+ 	char* contenido = (char*) malloc(sizeof(archivo)*TAM);
  	char caracter;
  	archivo = fopen ( nombre_archivo, "r" );
  	int i =0;
@@ -303,7 +303,7 @@ char **obtener_estados(const char* NDFA, char tipo ){
 	int flag = 0;
 	char caracter;
 	int fileLenght = ( strlen(NDFA));
-	char* contenido = malloc(sizeof(char));
+	char* contenido = (char*) malloc(sizeof(char));
 	char y;
 	int aumentarL = 0;
 	for (i=0;i <=fileLenght ; i++)
@@ -370,7 +370,7 @@ char obtenerModo(const char* DFA){
 char* obtenerPalabra(const char* DFA){
 	int i = 0;
 	char* palabra = (char *) malloc(sizeof(char)*TAM);
-	while(DFA[i+1] != '\n'){
+	while(DFA[i] != '\n'){
 		palabra[i]=DFA[i];
 		i++;
 	}
@@ -392,7 +392,7 @@ char* obtenerEstadoInicial(const char* DFA){
 		i++;
 	}
 	i=i+2;
-	while(DFA[i+1] != '\n'){
+	while(DFA[i] != '\n'){
 		estado_inicial[j]=DFA[i];
 		i++;
 		j++;
@@ -415,7 +415,7 @@ char* obtenerEstadosFinales(const char* DFA){
 		i++;
 	}
 	i=i+2;
-	while(DFA[i+1] != '\n'){
+	while(DFA[i] != '\n'){
 		estados_finales[j]=DFA[i];
 		i++;
 		j++;
@@ -527,7 +527,7 @@ Transicion* obtenerTransicionesDFA(const char* DFA){
 					i++;
 				}
 				transiciones[k].estadosiguiente = (char *) malloc(sizeof(char)*TAM);
-				while(DFA[i+1]!='\n'){
+				while(DFA[i]!='\n'){
 					//Ingreso de los estados generados por la transicion
 					transiciones[k].estadosiguiente[j]=DFA[i] ;
 					j++;

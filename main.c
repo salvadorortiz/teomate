@@ -27,7 +27,7 @@ int main(void){
 			//VERIFICACION DE INGRESO DE OPCION VALIDA
 			while (getchar() != '\n');
 			if(opcion>4 || opcion<1){
-				printf("\n\nOpción inválida\n");
+				printf("\n\nOpcion invalida\n");
 			}else{
 				break;
 			}
