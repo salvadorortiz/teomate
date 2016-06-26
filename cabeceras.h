@@ -2,11 +2,11 @@
 #include "stdlib.h"
 #include "string.h"
 
-//MACROS
+/**MACROS*/
 #define TRUE 1
 #define TAM 5000
 
-//Prototipos de funciones
+/**PROTOTIPOS DE FUNCIONES*/
 void modulo1(void);
 void modulo2(void);
 void modulo3(void);
@@ -14,7 +14,7 @@ const char * leerArchivo(char *);
 const char * leerArchivoCompleto(char *);
 char *concatenar(char *, char);
 
-//Variables
+/**MENSAJES DE ERROR Y MENSAJE DE CONTINUAR*/
 const char * error_parentesis = "\n\n\nERROR DE SINTAXIS: número incorrecto de parentesis de cierre respecto a parentesis de apertura\n";
 const char * error_apertura = "\n\n\nERROR DE SINTAXIS: se encontró una expresión incorrecta luego de '('\n";
 const char * error_cierre = "\n\n\nERROR DE SINTAXIS: se encontró una expresión incorrecta luego de ')'\n";
@@ -25,13 +25,13 @@ const char * error_and = "\n\n\nERROR DE SINTAXIS: se encontró una expresión i
 const char * error_simbolo = "\n\n\nERROR DE SINTAXIS: se esperaba un operador luego del simbolo del alfabeto: ";
 const char * continuar = "Presione ENTER para continuar";
 
+/**ESTRUCTURA DE DATOS PARA LA FUNCION DE TRANSICION DE LOS DFA Y NDFA*/
 typedef struct transicion
 {
 	char* estado;
 	char valor;
 	char* estadosiguiente;
 }Transicion;
-
 int potencia(int b,int e){
     int i;
     int pot=1;
@@ -95,8 +95,15 @@ Transicion buscarEstado(char* estado, Transicion* todosLosEstados){
 	return def;
 }
 
-Transicion* obtenerTransiciones(const char* NDFA)
-{
+/** 
+	Funcion que lee todas las transiciones pertenecientes a la definicion de la funcion
+	de transicion del NDFA.
+
+	__name__:				obtenerTransiciones	
+    @param NDFA: 			contenido leido desde el archivo de texto
+    @return transiciones: 	puntero hacia el conjunto de estructuras del tipo Transicion
+*/
+Transicion* obtenerTransiciones(const char* NDFA){
 	Transicion* transiciones = (Transicion *) malloc (1000*sizeof(Transicion));
 	
 	int i=0, fileLenght = ( strlen(NDFA));
@@ -157,20 +164,29 @@ Transicion* obtenerTransiciones(const char* NDFA)
 	return transiciones;
 }
 
-//Definición de funciones
+/** 
+	Funcion que lee el contenido completo de un archivo como una sola cadena.
+
+	__name__:				leerArchivo	
+    @param nombre_archivo: 	nombre del archivo del cual se leera el contenido 
+    @return contenido: 		cadena leida del archivo pasado como parametro	
+*/
 const char * leerArchivo(char * nombre_archivo){
-	//Apertura y lectura del archivo pasado por parametro
 	FILE *archivo;
  	char* contenido = malloc(sizeof(archivo)*TAM);
  	archivo = fopen ( nombre_archivo, "r" );
  	fscanf(archivo, "%s" ,contenido);
  	fclose (archivo);
- 	//Cierre del archivo
-
- 	//Retorno del contenido del archivo
  	return contenido; 
 }
 
+/** 
+	Funcion que lee el contenido completo de un archivo caracter a caracter.
+
+	__name__:				leerArchivoCompleto	
+    @param nombre_archivo: 	nombre del archivo del cual se leera el contenido 
+    @return contenido: 		cadena leida del archivo pasado como parametro	
+*/
 const char * leerArchivoCompleto(char * nombre_archivo){
 	FILE *archivo;
  	char* contenido = malloc(sizeof(archivo)*TAM);
@@ -186,17 +202,15 @@ const char * leerArchivoCompleto(char * nombre_archivo){
  	fclose (archivo);
  	return contenido;
 }
-char *concatenar_caracter(char *cadena, char caracter){ 
-   int i;
-   //Se busca el final de la cadena
-   for (i = 0; cadena[i] != '\0'; i++);
-   //Se añade el caracter en una posición adelante del final anterior
-   cadena[i++] = caracter;
-   //Se  añade el nuevo fin de la cadena
-   cadena[i] = '\0';
-   return cadena; 
-}
 
+/** 
+	-----AGREGAR DESCRIPCION AQUI-----
+
+	__name__:			obtenerEstadoEspecifico	
+    @param estados: 	-----AGREGAR DESCRIPCION AQUI-----
+    @param i: 			-----AGREGAR DESCRIPCION AQUI-----
+    @return estado: 	-----AGREGAR DESCRIPCION AQUI-----	
+*/
 char *obtenerEstadoEspecifico(char** estados,int i){
 	int j=0;
 	char* estado = (char *) malloc (1000*sizeof(char));
@@ -207,6 +221,15 @@ char *obtenerEstadoEspecifico(char** estados,int i){
 	printf("estado %s \n", estados[i]);
 	return estado;
 }
+
+/** 
+	-----AGREGAR DESCRIPCION AQUI-----
+
+	__name__:			concatenarEstado	
+    @param estados: 	-----AGREGAR DESCRIPCION AQUI-----
+    @param estado: 		-----AGREGAR DESCRIPCION AQUI-----
+    @return MetaEstado: -----AGREGAR DESCRIPCION AQUI-----	
+*/
 char *concatenarEstado(char* estados, char* estado){
 	printf("concatenando\n");
 	int i = 0,j=0;
@@ -224,6 +247,15 @@ char *concatenarEstado(char* estados, char* estado){
 	MetaEstado[i]='|';
 	return MetaEstado;
 }
+
+/** 
+	-----AGREGAR DESCRIPCION AQUI-----
+
+	__name__:			imprimirEstados	
+    @param estados: 	-----AGREGAR DESCRIPCION AQUI-----
+    @param estado: 		-----AGREGAR DESCRIPCION AQUI-----
+    @return MetaEstado: -----AGREGAR DESCRIPCION AQUI-----	
+*/
 void imprimirEstados(char** estados){
 	int i=0,j=0;
 	for (i=0; i< 5 ;i++){
@@ -239,6 +271,14 @@ void imprimirEstados(char** estados){
 			
 	}
 }
+
+/** 
+	-----AGREGAR DESCRIPCION AQUI-----
+
+	__name__:			obtener_estados	
+    @param estados: 	-----AGREGAR DESCRIPCION AQUI-----
+    @return i:			-----AGREGAR DESCRIPCION AQUI-----	
+*/
 int obtenerCantidadEstados(char** estados){
 	int i=0;
 	while(estados[i][0] != '|'){
@@ -247,6 +287,14 @@ int obtenerCantidadEstados(char** estados){
 	return i;
 }
 
+/** 
+	-----AGREGAR DESCRIPCION AQUI-----
+
+	__name__:			obtener_estados	
+    @param NDFA: 		-----AGREGAR DESCRIPCION AQUI-----
+    @param tipo: 		-----AGREGAR DESCRIPCION AQUI-----
+    @return estados:	-----AGREGAR DESCRIPCION AQUI-----	
+*/
 char **obtener_estados(const char* NDFA, char tipo ){
 	int i=0,j=0,k=0,l=0;
 	char** estados= (char **)malloc (1000*sizeof(char *));
@@ -294,6 +342,13 @@ char **obtener_estados(const char* NDFA, char tipo ){
 	return estados;
 }
 
+/** 
+	Funcion que verifica el modo en el que se trabajara en el modulo 3 (1:DFA, 2:NDFA)
+
+	__name__:			obtenerModo	
+    @param DFA: 		contenido leido desde el archivo de texto
+    @return DFA[i+1]:	caracter que indica el modo en el que se trabajara	
+*/
 char obtenerModo(const char* DFA){
 	int i = 0;
 	char modo;
@@ -305,6 +360,13 @@ char obtenerModo(const char* DFA){
 	}
 }
 
+/** 
+	Funcion que verifica la palabra a evaluar en el modulo 3
+
+	__name__:			obtenerPalabra	
+    @param DFA: 		contenido leido desde el archivo de texto
+    @return palabra:	palabra que sera evaluada por el modulo 3	
+*/
 char* obtenerPalabra(const char* DFA){
 	int i = 0;
 	char* palabra = (char *) malloc(sizeof(char)*TAM);
@@ -315,6 +377,13 @@ char* obtenerPalabra(const char* DFA){
 	return palabra;
 }
 
+/** 
+	Funcion que verifica el estado inicial del automata
+
+	__name__:				obtenerEstadoInicial	
+    @param DFA: 			contenido leido desde el archivo de texto
+    @return estado_inicial:	cadena que contiene el estado inicial del automata	
+*/
 char* obtenerEstadoInicial(const char* DFA){
 	int i = 0;
 	int j = 0;
@@ -331,6 +400,13 @@ char* obtenerEstadoInicial(const char* DFA){
 	return estado_inicial;
 }
 
+/** 
+	Funcion que verifica el conjunto de estados finales del automata
+
+	__name__:					obtenerEstadosFinales	
+    @param DFA: 				contenido leido desde el archivo de texto
+    @return estados_finales:	cadena que contiene el conjunto de los estados finales del automata	
+*/
 char* obtenerEstadosFinales(const char* DFA){
 	int i = 0;
 	int j = 0;
@@ -347,6 +423,73 @@ char* obtenerEstadosFinales(const char* DFA){
 	return estados_finales;
 }
 
+/** 
+	Funcion que cuenta el numero de estados presentes en la cadena pasada por parametro
+
+	__name__:				contarEstados	
+    @param cadena: 			cadena que contiene un conjunto de estados
+    @return contador+1:		entero que representa el numero de estados presentes en la cadena	
+*/
+int contarEstados(char * cadena){
+	int contador = 0;
+	int i = 0;
+	if(strlen(cadena)==0){
+		return -1;
+	}
+	while(i < strlen(cadena)){
+		if(cadena[i]==','){
+			contador++;
+		}
+		i++;
+	}
+	return contador+1;
+}
+
+/** 
+	Funcion que elimina estados repetidos en la cadena pasada por parametro
+
+	__name__:				eliminarRepetidos	
+    @param cadena: 			cadena que contiene un conjunto de estados
+    @return cadena_aux:		cadena con estados repetidos eliminados	
+*/
+char* eliminarRepetidos(char * cadena){
+	char* cadena_aux = (char *) malloc(sizeof(char)*TAM);
+	char* estado = (char *) malloc(sizeof(char)*TAM);
+	int i = 1;
+	int k = 1;
+	cadena_aux[0] = '{';
+	while(i<(strlen(cadena)-1)){
+		int j = 0;
+		while(cadena[i]!=',' && cadena[i]!='}' && cadena[i]!='!'){
+			estado[j]=cadena[i];
+			j++;
+			i++;
+		}
+		i++;
+		char* repetido = strstr(cadena_aux, estado);
+		j=0;
+		if(repetido == NULL){
+			while(j<strlen(estado)){
+				cadena_aux[k]=estado[j];
+				k++;
+				j++;
+			}
+			cadena_aux[k]=',';
+			k++;
+		}
+	}
+	cadena_aux[k-1]='}';
+	return cadena_aux;
+}
+
+/** 
+	Funcion que lee todas las transiciones pertenecientes a la definicion de la funcion
+	de transicion del DFA.
+
+	__name__:				obtenerTransicionesDFA	
+    @param DFA: 			contenido leido desde el archivo de texto
+    @return transiciones: 	puntero hacia el conjunto de estructuras del tipo Transicion
+*/
 Transicion* obtenerTransicionesDFA(const char* DFA){
 	Transicion* transiciones = (Transicion *) malloc(sizeof(Transicion)*TAM);
 	
