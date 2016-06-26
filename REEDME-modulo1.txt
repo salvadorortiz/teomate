@@ -1,0 +1,35 @@
+AYUDA PARA EJECUCION DEL MODULO 1: INTERPRETE DE EXPRESIONES REGULARES
+
+ENTRADA: 
+La expresion regular que se desee evaluar, debera ser colocada en el archivo de texto modulo1.txt el cual debe
+estar en el mismo directorio del ejecutable compilado del main.c y tener el siguiente formato.
+
+OPERADORES:
+			(  delimitador apertura
+			)  delimitador cierre
+			*  cerradura de Kleene
+			^  cerradura positiva de Kleene
+			+  OR
+			.  AND
+
+DELIMITADORES: ()
+-Los delimitadores de apertura y cierre se deben utilizar cuando se desean realizar agrupaciones de ciertas operaciones que solo afecten a cierto simbolos. Ejemplo: (a+b)*+a
+
+-Deben existir tantos delimitadores de apertura como delimitadores de cierre, asi mismo no pueden aparecer mas delimitadores de cierre que de apertura al leerse de izquierda a derecha la expresion regular. Ejemplo: ((a*+b)*+a^)^
+
+
+CERRADURA DE KLEENE: *
+-Debe colocarse justo despues de un simbolo o justo despues de un delimitador de cierre para afectar una agrupacion de simbolos. Ejemplo: a*
+
+
+CERRADURA POSITIVA DE KLEENE: ^
+-Similar a la cerradura de Kleene, esta debe colocarse justo despues de un simbolo o justo despues de un delimitador de cierre para afectar una agrupacion de simbolos. Ejemplo: (a+b)*
+
+OR: +
+-Debe colocarse entre dos simbolos o entre dos agrupaciones de simbolos y no puede ir al inicio o al final de la expresion regular. Ejemplo: (a+b)*+(b+c)
+
+AND: .
+-Simboliza la concatenacion de simbolos o agrupaciones de simbolos. Debe especificarse explicitamente en la expresion regular, su omision brindaria una salida erronea.
+
+
+**NOTA: La expresion regular debe ser ingresada sin dejar espacios en blanco entre simbolos u operadores, caso contrario, la salida del interprete sera erronea.
