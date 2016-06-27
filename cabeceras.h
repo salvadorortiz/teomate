@@ -5,6 +5,12 @@
 /**MACROS*/
 #define TRUE 1
 #define TAM 5000
+typedef struct transicion
+{
+	char* estado;
+	char valor;
+	char* estadosiguiente;
+}Transicion;
 
 /**PROTOTIPOS DE FUNCIONES*/
 void modulo1(void);
@@ -13,6 +19,7 @@ void modulo3(void);
 const char * leerArchivo(char *);
 const char * leerArchivoCompleto(char *);
 char *concatenar(char *, char);
+Transicion buscarEstado(char* estado, Transicion* todosLosEstados,char valor);
 
 /**MENSAJES DE ERROR Y MENSAJE DE CONTINUAR*/
 const char * error_parentesis = "\n\n\nERROR DE SINTAXIS: número incorrecto de parentesis de cierre respecto a parentesis de apertura\n";
@@ -26,12 +33,132 @@ const char * error_simbolo = "\n\n\nERROR DE SINTAXIS: se esperaba un operador l
 const char * continuar = "Presione ENTER para continuar";
 
 /**ESTRUCTURA DE DATOS PARA LA FUNCION DE TRANSICION DE LOS DFA Y NDFA*/
-typedef struct transicion
-{
-	char* estado;
-	char valor;
-	char* estadosiguiente;
-}Transicion;
+
+int comparar_meta_con_estado(char* meta, char* estado){
+	int flag=0,i=0,j=0;
+	for(i=0;i<strlen(meta);i++){
+		for(j=0;j<strlen(estado);j++){
+			if(meta[i+j]==estado[j]){
+				flag =1;
+			}
+			else{
+				flag=0;
+			}
+		}
+		if(flag==1){
+			return flag;
+		}
+	}
+	return 0;
+}
+char* EliminarRepeticion(char* estadoSiguiente){
+	int i=0,j=0,k=0;
+	char* estadosSinRepeticion = (char *) malloc (1000*sizeof(char));
+	
+	char** estadosSeparados = (char **)malloc (1000*sizeof(char *));
+	for (i=0;i<1000;i++)
+		estadosSeparados[i] = (char *) malloc (1000*sizeof(char));
+		
+	char* estadoAux = (char *) malloc (1000*sizeof(char));
+	int estadosTam = strlen(estadoSiguiente);
+	
+	for(i=0;i<estadosTam;i++){
+		if(estadoSiguiente[i]!=','){
+			estadosSeparados[j][k]= estadoSiguiente[i];
+			k++;
+		}else{
+			k=0;
+			j++;
+		}
+	}
+	k=0,i=0;
+	while(estadosSeparados[i][0]!='\0'){
+		j=i+1;
+		while(estadosSeparados[j][0]!='\0'){
+			
+			int sonIguales = strcmp(estadosSeparados[i],estadosSeparados[j]);
+			if(sonIguales==0){
+				k=1;
+				break;
+			}
+			j++;
+		}
+		if (k==0 && (strcmp(estadosSeparados[i],"!")!=0 && estadosSeparados[1][0]!='\0')){
+			strcat(estadosSinRepeticion, estadosSeparados[i]);
+			strcat(estadosSinRepeticion, ",");
+		}else if(k==0 && (strcmp(estadosSeparados[i],"!")!=0)&& estadosSeparados[1][0]=='\0'){
+			strcat(estadosSinRepeticion, estadosSeparados[i]);
+		}else if(strcmp(estadosSeparados[i],"!")==0 && estadosSeparados[1][0]=='\0'){
+			strcat(estadosSinRepeticion, estadosSeparados[i]);
+		}
+		k=0;
+		i++;
+	}
+	if(estadosSinRepeticion[strlen(estadosSinRepeticion)-1]==','){
+		estadosSinRepeticion[strlen(estadosSinRepeticion)-1] = '\0';
+	}
+	return estadosSinRepeticion;
+}
+char* siguienteMeta(char* MetaEstado,char* simbolo, Transicion* t){
+	int i=0,j=0;
+	char* meta_siguiente = (char *) malloc (1000*sizeof(char));
+	char* meta_auxiliar = (char *) malloc (1000*sizeof(char));
+	Transicion transicionTemp; 
+	while(MetaEstado[i] != '\0'){
+		if(MetaEstado[i]=='!'){
+			meta_siguiente = MetaEstado;
+		}else if (MetaEstado[i+1]=='q'|| MetaEstado[i+1]=='\0'){
+			meta_auxiliar[strlen(meta_auxiliar)]=MetaEstado[i];
+			Transicion estado=buscarEstado(meta_auxiliar, t, simbolo[0]);
+			strcat(meta_siguiente, estado.estadosiguiente);
+			strcat(meta_siguiente, ",");
+			meta_auxiliar= (char *) malloc (1000*sizeof(char));
+		}else if (MetaEstado[i+1]!='q'){
+			meta_auxiliar[strlen(meta_auxiliar)]=MetaEstado[i];
+		}
+		i++;
+	}
+	if(meta_siguiente[strlen(meta_siguiente)-1]==','){
+		meta_siguiente[strlen(meta_siguiente)-1] = '\0';
+	}
+	meta_siguiente = EliminarRepeticion(meta_siguiente);
+	return meta_siguiente;
+}
+void evaluarMetas(char** MetaEstados, char** alfabeto, Transicion* t){
+	int j=0,i=0;
+	int cantidadAlfabeto = obtenerCantidadEstados(alfabeto);
+	
+	for(i=0;i<cantidadAlfabeto;i++){
+			alfabeto[i][strlen(alfabeto[i])-1]='\0';
+	}
+	while(MetaEstados[j][0]!='\0'){
+		for(i=0;i<cantidadAlfabeto;i++){
+			char* estadoSiguiente=siguienteMeta(MetaEstados[j],alfabeto[i],t);
+			printf("T([%s],%s)={%s}\n\n",MetaEstados[j],alfabeto[i],estadoSiguiente);
+		}
+		j++;
+	}
+}
+char ** obtener_metas_estados_finales(char** MetaEstados, char** estadosFinales){
+	int i=0,j=0,k=0;
+	char** metasFinales = (char **)malloc (1000*sizeof(char *));
+	for (i=0;i<1000;i++)
+		metasFinales[i] = (char *) malloc (1000*sizeof(char));
+	int contadorFinales= obtenerCantidadEstados(estadosFinales);
+	for(i=0;i<contadorFinales;i++){
+		estadosFinales[i][strlen(estadosFinales[i])-1]='\0';
+		while(MetaEstados[j][0]!='\0'){
+			int x = comparar_meta_con_estado(MetaEstados[j],estadosFinales[i]);
+			if(x==1){
+				metasFinales[k]= MetaEstados[j];
+				k++;
+			}
+			j++;
+		}
+		j=0;
+	}
+	return metasFinales;
+}
 int potencia(int b,int e){
     int i;
     int pot=1;
@@ -40,6 +167,7 @@ int potencia(int b,int e){
     }
     return pot;
 }
+
 char** cleanStates(char** estados, int cantidadEstados){
 	int i =0;
 	char** estadosLimpios = (char **)malloc (1000*sizeof(char *));
@@ -47,9 +175,7 @@ char** cleanStates(char** estados, int cantidadEstados){
 		estadosLimpios[i] = (char *) malloc (1000*sizeof(char));
 		
 	for(i=0; i<cantidadEstados; i++){
-		printf("start");
 		estados[i][strlen(estados[i])-1]='\0';
-		printf("%s\n",estados[i]);
 		estadosLimpios[i] = estados[i];
 	}
 	return	estadosLimpios;
@@ -67,12 +193,12 @@ char** obtenerMetas(char** estados, int limite){
           	strcat(metaTemp, estados[j]);
 		  }
         }
-        metaEstados[i] = metaTemp;
+        metaEstados[i] =(strlen(metaTemp)!=0)? metaTemp:"!";
     }
     return metaEstados;
 }
 
-Transicion buscarEstado(char* estado, Transicion* todosLosEstados){
+Transicion buscarEstado(char* estado, Transicion* todosLosEstados, char valor){
 	int sizeEstados= (sizeof(todosLosEstados));
 	Transicion def;
 	int i = 0, j = 0;
@@ -80,7 +206,7 @@ Transicion buscarEstado(char* estado, Transicion* todosLosEstados){
 		int sizeEstado = (sizeof(todosLosEstados[i].estado));
 		int flag = 0;
 		for (j=0; j<sizeEstado; j++){
-			if (todosLosEstados[i].estado != NULL && todosLosEstados[i].estado[j] == estado[j]){
+			if (todosLosEstados[i].estado != NULL && todosLosEstados[i].estado[j] == estado[j] && todosLosEstados[i].valor == valor){
 				flag = 1;
 			}else{
 				flag = 0;
@@ -315,23 +441,22 @@ char **obtener_estados(const char* NDFA, char tipo ){
 				flag = 1;
 				aumentarL = 0;
 			}else if (flag == 1 && caracter!= '=' && caracter!= '{' && caracter!= '}' && caracter!= ','){
-				printf (" 1 i=%d k=%d char= %c \n",l,k,caracter);
 				estados[l][k] = caracter;
 				k++;
 				aumentarL = 1;
-			}else if (caracter == '}' || caracter == 0 ){
+			}else if (flag == 1 && caracter == '}' || caracter == 0 ){
 				estados[l][k] = '|';
 				l++;
-				flag = 0;
 				j++;
+				flag = 0;
 				aumentarL = 0;
 				break;
 			}
 			j++;
 		}while(caracter != ',' );
 		if (aumentarL==1){
-			estados[l][k] = '|';
 			
+			estados[l][k] = '|';
 			l++;
 			aumentarL= 0;
 		}

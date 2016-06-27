@@ -122,40 +122,46 @@ void modulo1(void){
 */
 void modulo2(void){
 	int i=0,j=0,k=0,pos =0; 
-	const char* NDFA = leerArchivoCompleto("NDFA.txt");
+	const char* NDFA = leerArchivoCompleto("modulo2.txt");
 	char** estados= obtener_estados(NDFA, 'Q');
+	char** alfabeto= obtener_estados(NDFA,'E');
+	int cantidadDeSimbolos = obtenerCantidadEstados(alfabeto);
+	alfabeto=cleanStates(alfabeto,cantidadDeSimbolos);
 	int cantidadEstados = obtenerCantidadEstados(estados);
 	char** estadosLimpios = cleanStates(estados,cantidadEstados);
 	char** MetaEstados = obtenerMetas(estadosLimpios,cantidadEstados);
 	int aux = potencia(2,cantidadEstados);
+	printf("\n\nM=(Q,E,T,S,F)\n\n");
+	printf("Q={");
 	for (i=0; i<aux;i++){
-		printf("%s\n",MetaEstados[i]);
+		if(MetaEstados[i+1][0]!='\0')
+			printf("[%s],",MetaEstados[i]);
+		else
+			printf("[%s]}\n\n",MetaEstados[i]);
 	}
-	/*Transicion* t = obtenerTransiciones(NDFA);
-	printf("\n---------------------Buscar estado--------------------------\n");
-	buscarEstado("q3", t);
-	printf("\n-----------------------------------------------\n");
-	printf("\n---------------------Ejemplo de como accesar a transiciones  --------------------------\n");
-	int aux= (sizeof(t));
-	while (t[i].estado != NULL )
-	{
-		printf ("estado: %s, valor: %c, estadosSiguientes %s\n",t[i].estado, t[i].valor, t[i].estadosiguiente);	
-		i++;
+	printf("E={");
+	for (i=0; i<cantidadDeSimbolos;i++){
+		if(alfabeto[i+1][0]!='\0')
+			printf("%s,",alfabeto[i]);
+		else
+			printf("%s}\n\n",alfabeto[i]);
 	}
+	printf("S={%s}\n\n",obtenerEstadoInicial(NDFA));
+	char** estadosFinales= obtener_estados(NDFA,'F');
+	char** metasFinales= obtener_metas_estados_finales(MetaEstados,estadosFinales);
 	i=0;
-	printf("\n-----------------------------------------------\n");
-	char** metaEstados= (char **)malloc (2000*sizeof(char *));
-	for (i=0;i<2000;i++)
-		metaEstados[i] = (char *) malloc (2000*sizeof(char));
-	for (i=0; i < cantidadEstados; i++){
-		for(j=i;j<cantidadEstados; j++){
-			metaEstados[pos]= concatenarEstado(estados[j], estados[j+1]);
-			pos++;
+	printf("F={");
+	while(metasFinales[i][0]!='\0'){
+		printf("[%s]",metasFinales[i]);
+		i++;
+		if(metasFinales[i][0]!='\0'){
+			printf(",");
+		}else{
+			printf("}\n\n");
 		}
-		k=1;
-	}*/
-	
-	printf("Cantidad de estados: %d\n" , obtenerCantidadEstados(estados));
+	}
+	Transicion* t = obtenerTransiciones(NDFA);
+	evaluarMetas(MetaEstados, obtener_estados(NDFA,'E'),t);
 }
 
 /** 
