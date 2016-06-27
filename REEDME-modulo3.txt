@@ -1,0 +1,21 @@
+AYUDA PARA EJECUCION DEL MODULO 3: SIMULADOR DE NDFA O DFA
+
+ENTRADA:
+La palabra a evaluar, el tipo de automata a usar (DFA o NDFA) y la definicion propia del automata debera ser colocado en el archivo de texto modulo3.txt el cual debe estar en el mismo directorio del ejecutable compilado del main.c y tener el siguiente formato.
+
+	1. Palabra a evaluar: La cual sera la palabra a evaluar por el automata - Ejemplo: 1010
+	2. Tipo de automata: Define si sera un DFA (1) o un NFDA (2)
+	3. Definicion del automata
+		3.1 Conjunto de estados: El conjunto de los estados que componen el automata, especificados con la letra Q, seguido de un signo igual (=), encerrados entre llaves y separados por comas - Ejemplo: Q={q0,q1,...qn}
+		3.2 Alfabeto: El conjunto de los simbolos que conforman el alfabeto soportado por el automata, especificado con la letra E, seguido de un signo igual (=), encerrados entre llaves y separados por comas - Ejemplo: {0,1}
+		3.3 Estado inicial: Es el estado donde partira la evaluacion de la palabra especificada anteriormente, especificado mediante la letra S, seguido de un sugno igual (=). Se recomienda utilizar el estado q0 para mejor comprension, sin embargo este puede variar - Ejemplo: S=q0
+		3.4 Cojunto de estados finales: El conjunto de los estados finales que determinan la aceptacion o no de una palabra, especificados con la letra F, seguido de un signo igual (=), encerrados entre llaves y separados por comas - Ejemplo: F={q0,q1,...qm}
+		3.5 Funcion de transicion: Especificadas por la letra T, simbolizan las transiciones que realizara el automata segun la combinacion T(ESTADO,SIMBOLO)=ESTADO para el caso de los DFA o la combinacion T(ESTADO,SIMBOLO)=CONJUNTO_ESTADOS o T(ESTADO,SIMBOLO)=!, para el caso de los NDFA. Donde el simbolo ! denota el conjunto vacio. Cada transicion debe ir en una linea distinta del archivo, una tras otra.
+		Ejemplos: T(q0,0)=q3 (DFA), T(q0,0)={q0,q1} (NDFA), T(q0,1)=! (NDFA)
+
+**NOTA: Toda esta informacion debe ser ingresada sin dejar espacios en blanco entre los caracteres y el ingreso de salto de linea entre cada componente, caso contrario, la salida del interprete sera erronea. Para facilitar la comprension de dicho modulo, se incluye dentro del proyecto el archivo de texto "Ejemplos de Modulo 3.txt" donde se encuentra 4 ejemplos del ingreso de datos.
+
+
+PD.: El modulo 3 presento una falla, la cual no fue posible corregir, al compilarlo con gcc de 64 bits de Windows, el cual brinda una salida erronea en una primera instancia, si se selecciona nuevamente el modulo 3 desde el menu principal, el funcionamiento de este es correcto.
+
+

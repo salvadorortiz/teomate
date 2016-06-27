@@ -228,7 +228,7 @@ void modulo3(void){
 				palabra_aux[l] = palabra[k];
 				l++;
 			}
-			while (t[i+1].estado != NULL ){
+			while (t[i].estado != NULL ){
 				if(j==0){ //SE EVALUA SOLAMENTE EL SIMBOLO INCIAL
 					if((t[i].valor == palabra[j]) && (strcmp(t[i].estado,estado_actual) == 0)){
 						if(j!=strlen(palabra)-1){
