@@ -146,7 +146,7 @@ void modulo2(void){
 		else
 			printf("%s}\n\n",alfabeto[i]);
 	}
-	printf("S={%s}\n\n",obtenerEstadoInicial(NDFA));
+	printf("S={%s}\n\n",obtener_estado_inicial(NDFA));
 	char** estadosFinales= obtener_estados(NDFA,'F');
 	char** metasFinales= obtener_metas_estados_finales(MetaEstados,estadosFinales);
 	i=0;

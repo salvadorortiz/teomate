@@ -417,7 +417,24 @@ int obtenerCantidadEstados(char** estados){
 	}
 	return i;
 }
-
+char* obtener_estado_inicial(const char* NDFA){
+	int i=0,flag=0,k=0;
+	char* estadoInicial = (char *) malloc (1000*sizeof(char));
+	int fileLenght = ( strlen(NDFA));
+	for (i=0;i <=fileLenght ; i++)
+	{
+		if(flag == 1 && NDFA[i]!='\n'){
+			estadoInicial[k]= NDFA[i];
+			k++;
+		}else if(NDFA[i]=='S'){
+			flag =1;
+			i++;
+		}else if(NDFA[i]=='\n'){
+			flag =0;
+		}
+	}
+	return estadoInicial;
+}
 /** 
 	Genera los estados
 
