@@ -5,6 +5,8 @@
 /**MACROS*/
 #define TRUE 1
 #define TAM 5000
+
+/**ESTRUCTURA DE DATOS PARA LA FUNCION DE TRANSICION DE LOS DFA Y NDFA*/
 typedef struct transicion
 {
 	char* estado;
@@ -32,8 +34,15 @@ const char * error_and = "\n\n\nERROR DE SINTAXIS: se encontro una expresion inc
 const char * error_simbolo = "\n\n\nERROR DE SINTAXIS: se esperaba un operador luego del simbolo del alfabeto: ";
 const char * continuar = "Presione ENTER para continuar";
 
-/**ESTRUCTURA DE DATOS PARA LA FUNCION DE TRANSICION DE LOS DFA Y NDFA*/
 
+/** 
+	Funcion que verifica si el meta estado contiene un estado en especifico
+
+	__name__:				comparar_meta_con_estado	
+    @param meta: 			un meta en especifico
+    @param estado: 			y un estado en especifico
+    @return int: 			retorn 1 si se encuentra 0 si no se encuentra
+*/
 int comparar_meta_con_estado(char* meta, char* estado){
 	int flag=0,i=0,j=0;
 	for(i=0;i<strlen(meta);i++){
@@ -51,6 +60,13 @@ int comparar_meta_con_estado(char* meta, char* estado){
 	}
 	return 0;
 }
+/** 
+	Funcion que remueve los estados repeditos dentro de un meta y ademas remueve conjustos vacios innecesarios
+
+	__name__:				EliminarRepeticion	
+    @param estadoSiguiente: Es un meta estado resultado de llevar acabo un evaluacion de transicion.
+    @return int: 			retorna el meta sin estados repetidos y sin conjuntos vacios innecesarios.
+*/
 char* EliminarRepeticion(char* estadoSiguiente){
 	int i=0,j=0,k=0;
 	char* estadosSinRepeticion = (char *) malloc (1000*sizeof(char));
@@ -99,6 +115,15 @@ char* EliminarRepeticion(char* estadoSiguiente){
 	}
 	return estadosSinRepeticion;
 }
+/*
+	Funcion que evalua un meta estado con respecto a un simbolo y devuelve el meta estado siguiente
+
+	__name__:				siguienteMeta	
+    @param MetaEstado: 	El meta estado que se va a evaluar
+    @param simbolo: 	el simbolo con el que se evaluara el meta
+    @param t: 			el conjunto de todas las transiciones de todos los estados
+    @return char*: 		el meta estado ya evaluado
+*/
 char* siguienteMeta(char* MetaEstado,char* simbolo, Transicion* t){
 	int i=0,j=0;
 	char* meta_siguiente = (char *) malloc (1000*sizeof(char));
@@ -124,6 +149,16 @@ char* siguienteMeta(char* MetaEstado,char* simbolo, Transicion* t){
 	meta_siguiente = EliminarRepeticion(meta_siguiente);
 	return meta_siguiente;
 }
+
+/*
+	Funcion que imprime los metasy los meta estados siguientes luego de evaluarlos
+
+	__name__:			evaluarMetas	
+    @param MetaEstados: conjunto de MetaEstados que se evaluaran
+    @param alfabeto: 	los simbolo del alfabeto
+    @param t: 			el conjunto de todas las transiciones de todos los estados
+    @return void: 		solo imprime los resultados
+*/
 void evaluarMetas(char** MetaEstados, char** alfabeto, Transicion* t){
 	int j=0,i=0;
 	int cantidadAlfabeto = obtenerCantidadEstados(alfabeto);
@@ -139,6 +174,14 @@ void evaluarMetas(char** MetaEstados, char** alfabeto, Transicion* t){
 		j++;
 	}
 }
+/*
+	Funcion que evalua cuales meta estados son finales 
+
+	__name__:				obtener_metas_estados_finales	
+    @param MetaEstados: 	conjunto de MetaEstados que se evaluaran
+    @param estadosFinales: 	Los estados finales originales
+    @return char**: 		doble puntero de los meta estados finales
+*/
 char ** obtener_metas_estados_finales(char** MetaEstados, char** estadosFinales){
 	int i=0,j=0,k=0;
 	char** metasFinales = (char **)malloc (1000*sizeof(char *));
@@ -159,6 +202,14 @@ char ** obtener_metas_estados_finales(char** MetaEstados, char** estadosFinales)
 	}
 	return metasFinales;
 }
+/*
+	Funcion que evalua la cantidad del un elevado a un n 
+
+	__name__:				potencia	
+    @param b: 		base
+    @param e: 		exponente
+    @return int: 	potencia
+*/
 int potencia(int b,int e){
     int i;
     int pot=1;
@@ -167,7 +218,14 @@ int potencia(int b,int e){
     }
     return pot;
 }
+/*
+	Funcion que elimina delimitadores del arreglo de estados 
 
+	__name__:				potencia	
+    @param estados: 		estados que se quieren limpiar
+    @param cantidadEstados: cantidad de estados
+    @return char **: 		estos sin delimitadores
+*/
 char** cleanStates(char** estados, int cantidadEstados){
 	int i =0;
 	char** estadosLimpios = (char **)malloc (1000*sizeof(char *));
@@ -180,6 +238,14 @@ char** cleanStates(char** estados, int cantidadEstados){
 	}
 	return	estadosLimpios;
 }
+/*
+	Funcion que genera los meta estados
+
+	__name__:				obtenerMetas	
+    @param estados: 		todos los estados
+    @param cantidadEstados: cantidad de meta estados
+    @return char **: 		los meta estados
+*/
 char** obtenerMetas(char** estados, int limite){
 	int i,j;
 	char** metaEstados = (char **)malloc (1000*sizeof(char *));
@@ -197,7 +263,15 @@ char** obtenerMetas(char** estados, int limite){
     }
     return metaEstados;
 }
+/*
+	Funcion busca un estado en especifico en base a un valor especificado y a un estado
 
+	__name__:				buscarEstado	
+    @param estado: 			todos los estados
+    @param todosLosEstados: todos los estados con sus transiciones
+    @param valor: 			el valor que conlleva a la transicion
+    @return Transicion: 	devuelve una estructura de estadoActual, estadoSiguiente y valor que genera esa transicion.
+*/
 Transicion buscarEstado(char* estado, Transicion* todosLosEstados, char valor){
 	int sizeEstados= (sizeof(todosLosEstados));
 	Transicion def;
@@ -330,80 +404,11 @@ const char * leerArchivoCompleto(char * nombre_archivo){
 }
 
 /** 
-	-----AGREGAR DESCRIPCION AQUI-----
+	se utiliza para saber cuantos estado se encuentran en el doble puntero
 
-	__name__:			obtenerEstadoEspecifico	
-    @param estados: 	-----AGREGAR DESCRIPCION AQUI-----
-    @param i: 			-----AGREGAR DESCRIPCION AQUI-----
-    @return estado: 	-----AGREGAR DESCRIPCION AQUI-----	
-*/
-char *obtenerEstadoEspecifico(char** estados,int i){
-	int j=0;
-	char* estado = (char *) malloc (1000*sizeof(char));
-	do{
-		estado[j] = estados[i][j];
-		j++;
-	}while(estados[i][j] != '|' );
-	printf("estado %s \n", estados[i]);
-	return estado;
-}
-
-/** 
-	-----AGREGAR DESCRIPCION AQUI-----
-
-	__name__:			concatenarEstado	
-    @param estados: 	-----AGREGAR DESCRIPCION AQUI-----
-    @param estado: 		-----AGREGAR DESCRIPCION AQUI-----
-    @return MetaEstado: -----AGREGAR DESCRIPCION AQUI-----	
-*/
-char *concatenarEstado(char* estados, char* estado){
-	printf("concatenando\n");
-	int i = 0,j=0;
-	char c ;
-	char* MetaEstado = (char *) malloc (1000*sizeof(char));
-	while(estados[i]!='|'){
-		MetaEstado[i]= estados[i];
-		i++;
-	};
-	while(estados[j]!='|'){
-		MetaEstado[i]= estados[j];
-		j++;
-		i++;
-	};
-	MetaEstado[i]='|';
-	return MetaEstado;
-}
-
-/** 
-	-----AGREGAR DESCRIPCION AQUI-----
-
-	__name__:			imprimirEstados	
-    @param estados: 	-----AGREGAR DESCRIPCION AQUI-----
-    @param estado: 		-----AGREGAR DESCRIPCION AQUI-----
-    @return MetaEstado: -----AGREGAR DESCRIPCION AQUI-----	
-*/
-void imprimirEstados(char** estados){
-	int i=0,j=0;
-	for (i=0; i< 5 ;i++){
-		for (j=0; j< 5 ;j++){
-			if (estados[i][j] != '|')
-				printf("i: %d j: %d c: %c \n",i,j, estados[i][j]);
-			else
-				break;
-		}
-		if (estados[i][0] == '|'){
-			break;
-		}
-			
-	}
-}
-
-/** 
-	-----AGREGAR DESCRIPCION AQUI-----
-
-	__name__:			obtener_estados	
-    @param estados: 	-----AGREGAR DESCRIPCION AQUI-----
-    @return i:			-----AGREGAR DESCRIPCION AQUI-----	
+	__name__:			obtenerCantidadEstados	
+    @param estados: 	doble puntero de estados;
+    @return i:			la cantidad de estados	
 */
 int obtenerCantidadEstados(char** estados){
 	int i=0;
@@ -414,12 +419,12 @@ int obtenerCantidadEstados(char** estados){
 }
 
 /** 
-	-----AGREGAR DESCRIPCION AQUI-----
+	Genera los estados
 
 	__name__:			obtener_estados	
-    @param NDFA: 		-----AGREGAR DESCRIPCION AQUI-----
-    @param tipo: 		-----AGREGAR DESCRIPCION AQUI-----
-    @return estados:	-----AGREGAR DESCRIPCION AQUI-----	
+    @param NDFA: 		Todo el contenido del archivo esta contenido aca
+    @param tipo: 		que tipo de datos se quiere sacar de alli(estados, estados finales, alfabeto, etc)
+    @return estados:	un doble puntero con los valos solicitados.	
 */
 char **obtener_estados(const char* NDFA, char tipo ){
 	int i=0,j=0,k=0,l=0;
