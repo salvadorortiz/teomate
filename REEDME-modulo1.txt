@@ -29,7 +29,7 @@ OR: +
 -Debe colocarse entre dos simbolos o entre dos agrupaciones de simbolos y no puede ir al inicio o al final de la expresion regular. Ejemplo: (a+b)*+(b+c)
 
 AND: .
--Simboliza la concatenacion de simbolos o agrupaciones de simbolos. Debe especificarse explicitamente en la expresion regular, su omision brindaria una salida erronea.
+-Simboliza la concatenacion de simbolos o agrupaciones de simbolos y no puede ir al inicio o al final de la expresion regular. Debe especificarse explicitamente en la expresion regular, su omision brindaria una salida erronea.
 
 
 **NOTA: La expresion regular debe ser ingresada sin dejar espacios en blanco entre simbolos u operadores, caso contrario, la salida del interprete sera erronea.
